@@ -51,12 +51,13 @@ header{background:#fff;border-bottom:1px solid #e8edf5;padding:14px 28px;display
 
 /* 카테고리 */
 .section-label{font-size:13px;font-weight:700;color:#8a94a6;letter-spacing:.5px;margin-bottom:14px}
-.cat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:14px;margin-bottom:48px}
-.cat-card{background:#fff;border:2px solid #e8edf5;border-radius:20px;padding:26px 16px;cursor:pointer;transition:all .2s;text-align:center;user-select:none}
+.cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:48px}
+@media(max-width:560px){.cat-grid{grid-template-columns:repeat(2,1fr)}}
+.cat-card{background:#fff;border:2px solid #e8edf5;border-radius:20px;padding:34px 18px;cursor:pointer;transition:all .2s;text-align:center;user-select:none}
 .cat-card:hover{border-color:#1565c0;box-shadow:0 8px 24px rgba(21,101,192,.13);transform:translateY(-3px)}
 .cat-card:active{transform:scale(.97)}
-.cat-card .ico{font-size:34px;margin-bottom:12px}
-.cat-card .name{font-size:15px;font-weight:700;color:#191f2e;margin-bottom:4px}
+.cat-card .ico{font-size:42px;margin-bottom:14px}
+.cat-card .name{font-size:16px;font-weight:700;color:#191f2e;margin-bottom:4px}
 .cat-card .cnt{font-size:12px;color:#8a94a6}
 
 /* 결과 */
@@ -80,6 +81,7 @@ header{background:#fff;border-bottom:1px solid #e8edf5;padding:14px 28px;display
 .b-rule{background:#fdecea;color:#b02020;border-color:#f5bcb8}
 .b-estimate{background:#ede9fb;color:#5020a0;border-color:#c9bdf5}
 .b-process{background:#e0f5f9;color:#006080;border-color:#a0dced}
+.b-insurance{background:#fff3e0;color:#a05000;border-color:#ffd09e}
 
 /* 팝업 */
 .overlay{display:none;position:fixed;inset:0;background:rgba(25,31,46,.35);z-index:400;backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:20px}
@@ -144,6 +146,16 @@ header{background:#fff;border-bottom:1px solid #e8edf5;padding:14px 28px;display
 .succ-warn{background:#fef2f2;border:1px solid #fca5a5;border-radius:10px;padding:12px 16px;font-size:13px;color:#b91c1c;line-height:1.7;display:flex;align-items:flex-start;gap:10px}
 .succ-warn-ico{font-size:20px;flex-shrink:0}
 
+/* 보험 가입 절차 flow */
+.flow-step{display:flex;gap:12px;align-items:center;background:#f8faff;border:1px solid #e0e8f7;border-radius:12px;padding:12px 14px}
+.flow-role{font-size:11px;font-weight:700;color:#fff;border-radius:8px;padding:5px 8px;flex-shrink:0;min-width:60px;text-align:center}
+.flow-role.customer{background:#1565c0}
+.flow-role.sales{background:#0a7a4e}
+.flow-role.hq{background:#5020a0}
+.flow-text{font-size:13.5px;color:#191f2e;line-height:1.55}
+.flow-arrow{text-align:center;color:#b0baca;font-size:14px;margin:5px 0}
+.flow-note{background:#fff8ed;border:1px solid #fde68a;border-radius:10px;padding:11px 14px;margin-top:12px;font-size:12.5px;color:#92400e;line-height:1.65;font-weight:500}
+
 /* 푸터 */
 footer{text-align:center;margin-top:2.5rem;font-size:11px;color:#9ca3af;padding-bottom:1rem}
 
@@ -195,7 +207,7 @@ footer{text-align:center;margin-top:2.5rem;font-size:11px;color:#9ca3af;padding-
   </div>
 
   <div class="search-box">
-    <input id="search-input" type="text" placeholder="예) 보증금, 위약금, 취득세, 미납, 승계..." oninput="onSearch(this.value)">
+    <input id="search-input" type="text" placeholder="예) 보증금, 위약금, 보험, 사고, 미납, 승계..." oninput="onSearch(this.value)">
     <span class="search-ico">🔍</span>
   </div>
 
@@ -235,10 +247,11 @@ const CATS=[
   {key:'rule',     ico:'⚠️', name:'주의 규정',          desc:'미납·해지·운전자 범위'},
   {key:'estimate', ico:'🧮', name:'견적 내는 법',        desc:'산출 기준·출고 원칙'},
   {key:'process',  ico:'📋', name:'계약 진행 및 관리',  desc:'대상별 서류·승계 조건'},
+  {key:'insurance',ico:'🛡️', name:'보험',              desc:'가입절차·자차보험·사고처리'},
 ];
 
-const BC={basic:'b-basic',condition:'b-condition',rule:'b-rule',estimate:'b-estimate',process:'b-process'};
-const BN={basic:'알기쉬운 상품 소개',condition:'보증금 및 비용 안내',rule:'주의 규정',estimate:'견적 내는 법',process:'계약 진행 및 관리'};
+const BC={basic:'b-basic',condition:'b-condition',rule:'b-rule',estimate:'b-estimate',process:'b-process',insurance:'b-insurance'};
+const BN={basic:'알기쉬운 상품 소개',condition:'보증금 및 비용 안내',rule:'주의 규정',estimate:'견적 내는 법',process:'계약 진행 및 관리',insurance:'보험'};
 
 const DATA=[
 
@@ -355,6 +368,86 @@ const DATA=[
    tags:['승계','재승계','6개월','3개월','승계비용','50만원','승계조건'],
    desc:'계약을 다른 분께 넘길 수 있는 승계 조건을 안내해요.',
    detail:{type:'succession'}},
+
+  /* ── 보험 ── */
+  {id:15, type:'insurance', title:'보험 가입 절차',
+   tags:['보험','가입절차','절차','신청서','보험가입','출고','흐름','흐름도'],
+   desc:'가입 신청부터 출고까지 5단계로 진행돼요.',
+   detail:{type:'insurance_flow', steps:[
+     {role:'고객',    text:'① 신청서 작성 및 계약금 입금'},
+     {role:'영업사원', text:'② 사전확인 및 고객정보 입력'},
+     {role:'본사',    text:'③ 보험 견적 확인 및 계약 검토'},
+     {role:'영업사원', text:'④ 잔금입금 안내(보험료 포함) · 계약서 발송 · 탁송요청'},
+     {role:'고객',    text:'⑤ 출고 전 보험 가입증명서 서명 (본사–고객 소통 예정)'},
+   ], note:'계약서 작성·잔금입금 기준 익일 보험가입, +2일 후 출고됩니다.'}},
+
+  {id:16, type:'insurance', title:'자차보험 및 자기부담금',
+   tags:['자차보험','자기부담금','면책금','선택','전액부담','수리비','전손','감가','휴차','자차'],
+   desc:'자차보험은 선택이며, 미가입 시 손해는 고객이 전액 부담해요.',
+   detail:{rules:[
+     {ico:'✅', text:'자차보험 가입은 선택사항입니다.'},
+     {ico:'⚠️', text:'자차보험 미가입으로 발생하는 아래 손해는 고객이 전액 부담합니다 — 피보험자동차 수리비 / 전손손해 / 감가손해 / 휴차손해 / 리스계약상 잔여채무 및 기타 손해'},
+     {ico:'💰', text:'자기부담금(면책금): 보험사 자차담보 가입 시 자기부담금이 있으며, 가입된 보험사를 통해 확인 가능합니다.'},
+   ]}},
+
+  {id:17, type:'insurance', title:'사고 시 보험 연락처',
+   tags:['사고','보험','연락처','접수','전화번호','삼성화재','현대해상','DB손해보험','KB손해보험','메리츠화재','한화손해보험','AXA','하나손해보험'],
+   desc:'사고 시 고객이 보험사에 직접 연락해 처리해요. 보험사별 연락처예요.',
+   detail:{table:{headers:['보험사','연락처'],rows:[
+     ['삼성화재','1588-5114'],
+     ['현대해상','1588-5656'],
+     ['DB손해보험','1588-0100'],
+     ['KB손해보험','1544-0114'],
+     ['메리츠화재','1566-7711'],
+     ['한화손해보험','1566-8000'],
+     ['AXA손해보험','1566-1566'],
+     ['하나손해보험','1566-3000'],
+   ]},rules:[
+     {ico:'📞', text:'사고 발생 시 고객이 가입된 보험사에 직접 연락하여 접수·처리합니다.'},
+   ]}},
+
+  {id:18, type:'insurance', title:'보험료 납부방법',
+   tags:['보험료','납부','부가세','일시납','2회','4회','분할','통합수납','수납'],
+   desc:'본사 통합 수납이며, 일시납/2회/4회로 나눠 낼 수 있어요.',
+   detail:{rules:[
+     {ico:'🏦', text:'입금·수납은 보험가입 편의를 위해 본사 통합 수납방식으로 진행됩니다.'},
+     {ico:'🧾', text:'보험료(부가세 별도)는 고객에게 청구됩니다.'},
+     {ico:'🔁', text:'출고 확정 후 보험 가입 시 보험료가 변동될 수 있으며, 변동분은 2회차 납입에 이월되어 차감·추가될 수 있습니다.'},
+     {ico:'💳', text:'보험료는 일시납 / 2회 / 4회로 나누어 납부할 수 있습니다.'},
+   ]}},
+
+  {id:19, type:'insurance', title:'보험 가입방법',
+   tags:['보험가입','가입방법','직접가입','계약자','피보험자','가입연령','만26세','69세','하모니'],
+   desc:'하모니를 통해서만 가입 가능하며, 계약자는 하모니예요.',
+   detail:{rules:[
+     {ico:'🏢', text:'하모니렌트카를 통한 보험가입만 가능합니다. (고객 직접 가입 불가)'},
+     {ico:'📄', text:'보험계약자: 하모니렌트카 / 피보험자: 고객'},
+     {ico:'🎂', text:'보험 가입 가능 연령: 만 26세 ~ 만 69세 중 선택 가능'},
+   ]}},
+
+  {id:20, type:'rule', title:'보험 갱신',
+   tags:['갱신','보험갱신','계약해지','해지'],
+   desc:'갱신이 안 되면 계약이 해지될 수 있어요.',
+   detail:{rules:[
+     {ico:'⚠️', text:'갱신이 안 되면 계약이 해지될 수 있습니다.'},
+     {ico:'📢', text:'차량 이용 중 발생하는 사고에 대한 유의사항을 고객에게 반드시 고지해 주세요.'},
+   ]}},
+
+  {id:21, type:'process', title:'계약 후 출고까지 소요시간',
+   tags:['출고','소요기간','소요시간','며칠','보험가입','실행일','결제일','기준일','매매상사'],
+   desc:'잔금입금 기준 익일 보험가입, +2일 후 출고돼요.',
+   detail:{rules:[
+     {ico:'🚗', text:'계약서 작성 및 잔금입금 기준 익일 보험가입, +2일 후 출고 가능합니다.'},
+     {ico:'📅', text:'실행(결제) 기준일: 회사가 중고자동차매매상사에 차량대금을 지급한 날을 기준으로 합니다.'},
+   ]}},
+
+  {id:22, type:'rule', title:'정비 및 법정검사',
+   tags:['정비','자가정비','하자','법정검사','검사비용','책임'],
+   desc:'고객 자가정비·사고처리 상품이며, 법정검사 비용은 고객 부담이에요.',
+   detail:{rules:[
+     {ico:'🔧', text:'정비: 고객 자가정비 및 사고처리 상품입니다. 차량 하자에 대해서는 본사 책임이 없습니다.'},
+     {ico:'🧰', text:'법정검사: 자동차 법정검사 비용은 고객이 부담합니다.'},
+   ]}},
 ];
 
 function buildCats(){
@@ -552,6 +645,18 @@ function buildPopupHTML(d){
           <div><strong>승계 시 비용 50만 원 발생</strong><br>승계 절차 안내 시 고객에게 비용 발생 사실을 사전에 반드시 고지하세요.</div>
         </div>
       </div>`;
+  }
+
+  if(d.detail.type==='insurance_flow'){
+    let h=`<div class="popup-desc">${d.desc}</div><div class="block"><div class="block-label">가입 절차</div>`;
+    d.detail.steps.forEach((s,i)=>{
+      const cls=s.role==='고객'?'customer':(s.role==='본사'?'hq':'sales');
+      h+=`<div class="flow-step"><span class="flow-role ${cls}">${s.role}</span><span class="flow-text">${s.text}</span></div>`;
+      if(i<d.detail.steps.length-1)h+=`<div class="flow-arrow">↓</div>`;
+    });
+    if(d.detail.note)h+=`<div class="flow-note">※ ${d.detail.note}</div>`;
+    h+='</div>';
+    return h;
   }
 
   // 일반 타입
