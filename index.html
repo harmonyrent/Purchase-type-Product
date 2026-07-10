@@ -118,6 +118,8 @@ header{background:#fff;border-bottom:1px solid #e8edf5;padding:14px 28px;display
 .est-desc{font-size:13px;color:#4a5570;line-height:1.7}
 .est-link{display:inline-flex;align-items:center;gap:5px;margin-top:8px;background:#fef3c7;color:#92400e;font-size:12px;font-weight:700;padding:5px 12px;border-radius:8px;border:1px solid #fde68a;text-decoration:none;transition:background .15s}
 .est-link:hover{background:#fde68a}
+.estimator-btn{display:inline-flex;align-items:center;gap:6px;background:#1565c0;color:#fff;font-size:14px;font-weight:700;padding:12px 22px;border-radius:12px;text-decoration:none;transition:background .15s}
+.estimator-btn:hover{background:#1251a3}
 
 /* 면허/휴대폰 카드 */
 .license-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
@@ -287,7 +289,7 @@ const DATA=[
    tags:['운전자','범위','가족','직원','임직원','법인특약','사실혼'],
    desc:'계약 유형별로 운전 가능한 사람이 달라요.',
    detail:{table:{headers:['계약 유형','운전 가능한 사람'],rows:[
-     ['개인','누구나'],
+     ['개인','보험가입증명서에 따름'],
      ['개인사업자','누구나'],
      ['법인','대표 및 임직원'],
    ]},rules:[
@@ -296,24 +298,21 @@ const DATA=[
 
   /* ── 계약 조건 ── */
   {id:5, type:'condition', title:'보증금 옵션',
-   tags:['보증금','10%','15%','20%','잔금','외제차','BMW','벤츠','선납금'],
+   tags:['보증금','10%','20%','30%','잔금','차종별','상이'],
    desc:'보증금 비율과 관계없이, 만기 시 추가 납부 없이 바로 인수돼요.',
    detail:{table:{headers:['보증금','만기 잔금','내용'],rows:[
      ['10%','없음','만기 시 추가 납부 없이 바로 인수'],
-     ['15%','없음','만기 시 추가 납부 없이 바로 인수'],
-     ['20%','없음',      '만기 시 추가 납부 없이 바로 인수'],
+     ['⋮','⋮','⋮'],
+     ['30%','없음','만기 시 추가 납부 없이 바로 인수'],
    ]},rules:[
-     {ico:'⚠️', text:'외제차(BMW·벤츠)의 경우 — 보증금 20% + 선납금 10% 조건으로만 진행 가능합니다.'},
+     {ico:'ℹ️', text:'보증금은 차종별로 10~30%까지 상이할 수 있습니다.'},
    ]}},
 
   {id:6, type:'condition', title:'보증금 분납',
-   tags:['보증금','분납','2회차','시동제어'],
-   desc:'보증금은 분납이 가능하지만 조건을 반드시 안내해야 해요.',
+   tags:['보증금','분납','불가','불가능'],
+   desc:'보증금 분납은 불가능합니다.',
    detail:{rules:[
-     {ico:'✅', text:'분납 가능합니다.'},
-     {ico:'📋', text:'2회차 결제일에 분납 보증금 + 월 리스료를 동시에 납부해야 해요.'},
-     {ico:'🔴', text:'2회차 결제일 미납 시 시동제어 및 계약 해지됩니다.'},
-     {ico:'⚠️', text:'분납 조건을 고객에게 사전에 명확히 안내해야 합니다.'},
+     {ico:'🚫', text:'보증금 분납은 불가능합니다.'},
    ]}},
 
   {id:7, type:'condition', title:'납부 방식 (선불)',
@@ -331,19 +330,13 @@ const DATA=[
      {ico:'💰', text:'만기 인수와 관련하여 발생하는 만기 인수대금 등 기타 부대비용은 고객이 부담해야 합니다.'},
    ]}},
 
-  {id:9, type:'condition', title:'탁송료 및 기본 제공 옵션',
-   tags:['탁송','탁송료','썬팅','블랙박스','차키','평택'],
-   desc:'탁송료와 기본 제공 옵션을 안내해요.',
+  {id:9, type:'condition', title:'기본 제공 옵션',
+   tags:['기본제공','옵션','차키','키','지급','1개'],
+   desc:'차키는 최초 1개만 지급돼요.',
    detail:{rules:[
-     {ico:'🚚', text:'탁송료: 차고지(평택센터) → 고객 인도 탁송료는 고객 부담이에요.'},
-     {ico:'🔑', text:'차키: 보증금 옵션에 관계없이 차키는 1개 지급됩니다.'},
-     {ico:'🪟', text:'썬팅: 측후면 30%, 전면 15% 기본 제공'},
-     {ico:'📹', text:'블랙박스: 기본 제공'},
-     {ico:'📹', text:'블랙박스 관리 및 AS는 고객(임차인) 책임입니다.'},
-     {ico:'⚠️', text:'블랙박스 촬영 여부에 따른 과실 부분에 대해 회사는 책임지지 않습니다.'},
+     {ico:'🔑', text:'차키는 보증금 옵션에 관계없이 최초 1개만 지급됩니다.'},
    ]}},
 
-  /* ── 주의 규정 ── */
   {id:10, type:'rule', title:'미납 시 어떻게 되나요?',
    tags:['미납','연체','시동제어','해지','2회'],
    desc:'2회 미납 시 시동제어 및 계약 해지됩니다.',
@@ -365,18 +358,17 @@ const DATA=[
 
   /* ── 견적 내는 법 ── */
   {id:12, type:'estimate', title:'견적은 어떻게 산출하나요?',
-   tags:['견적','산출','과세','평택','출고','LIST PRICE','파트너즈','대리점','영업담당자'],
-   desc:'견적을 낼 수 있는 방법은 총 3가지예요.',
-   detail:{type:'estimate_steps'}},
+   tags:['견적','산출','견적기','아이디','비밀번호','바로가기','영업사원'],
+   desc:'견적기로 산출하며, 아이디·비밀번호는 영업사원에게 문의하세요.',
+   detail:{type:'estimator_link'}},
 
-  /* ── 필수 서류 & 승계 ── */
   {id:13, type:'process', title:'대상별 필수 서류',
    tags:['서류','주민등록','면허증','법인','사업자','개인','법인등기부','재무제표','주주명부'],
    desc:'개인·개인사업자·법인사업자별 필요 서류가 달라요.',
    detail:{type:'doc_list'}},
 
   {id:14, type:'process', title:'승계 안내',
-   tags:['승계','재승계','6개월','3개월','승계비용','50만원','승계조건','사전승인','거절','정산','면책금'],
+   tags:['승계','재승계','6개월','3개월','승계비용','승계조건','사전승인','거절','정산','면책금','영업담당자'],
    desc:'계약을 다른 분께 넘길 수 있는 승계 조건을 안내해요.',
    detail:{type:'succession'}},
 
@@ -573,33 +565,11 @@ function buildPopupHTML(d){
       </div>`;
   }
 
-  if(d.detail.type==='estimate_steps'){
+  if(d.detail.type==='estimator_link'){
     return `
-      <div class="popup-desc">견적을 낼 수 있는 방법은 총 3가지예요. 차량 출처에 따라 방법이 달라요.</div>
-      <div class="block">
-        <div class="est-alert">⚠️ 모든 견적은 반드시 <strong>과세 / 평택출고 기준</strong>으로 산정해주세요.<br>※ 1차 탁송은 본사 차고지인 <strong>평택센터 출고</strong>가 기본 원칙입니다.</div>
-        <div class="est-step">
-          <div class="est-num">1</div>
-          <div>
-            <div class="est-title">하모니 재고 차량</div>
-            <div class="est-desc">파트너즈 사이트 내 신차 + 구매예정 차량<br>→ 파트너즈 사이트 내 <strong>가격 기준</strong>으로 구입형 견적 산출</div>
-            <a class="est-link" href="https://harmonypartners.kr/" target="_blank" rel="noopener">🔗 파트너즈 사이트 확인</a>
-          </div>
-        </div>
-        <div class="est-step">
-          <div class="est-num">2</div>
-          <div>
-            <div class="est-title">하모니 출고 (하모니 대리점을 통한 출고)</div>
-            <div class="est-desc">→ <strong>영업담당자</strong>를 통해 견적서 전달받은 후, 해당 가격 기준으로 구입형 견적 산출</div>
-          </div>
-        </div>
-        <div class="est-step">
-          <div class="est-num">3</div>
-          <div>
-            <div class="est-title">타대리점 출고</div>
-            <div class="est-desc">→ <strong>대리점</strong>을 통해 견적서 전달받은 후, 해당 가격 기준으로 구입형 견적 산출</div>
-          </div>
-        </div>
+      <div class="popup-desc">견적기의 아이디와 비밀번호는 영업사원에게 문의해주세요.</div>
+      <div style="text-align:center;margin-top:6px;">
+        <a class="estimator-btn" href="https://harmonysales.github.io/opensource_estimator_product_own/" target="_blank" rel="noopener">🔗 견적기 바로가기</a>
       </div>`;
   }
 
@@ -663,7 +633,7 @@ function buildPopupHTML(d){
         </div>
         <div class="succ-warn">
           <span class="succ-warn-ico">🪙</span>
-          <div><strong>승계 시 비용 50만 원 발생</strong><br>승계 절차 안내 시 고객에게 비용 발생 사실을 사전에 반드시 고지하세요.</div>
+          <div><strong>승계 비용</strong><br>내부 기준에 따라 상이하기 때문에 자세한 사항은 영업담당자에게 문의해주세요.</div>
         </div>
       </div>
       <div class="block">
